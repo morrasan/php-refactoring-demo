@@ -60,7 +60,7 @@ class Product
     /**
      * @return BigDecimal
      */
-    public function getPrice(): BigDecimal
+    public function getPrice()
     {
         return $this->price;
     }
@@ -68,7 +68,7 @@ class Product
     /**
      * @return string
      */
-    public function getDesc(): string
+    public function getDesc()
     {
         return $this->desc;
     }
@@ -76,7 +76,7 @@ class Product
     /**
      * @return string
      */
-    public function getLongDesc(): string
+    public function getLongDesc()
     {
         return $this->longDesc;
     }
@@ -84,7 +84,7 @@ class Product
     /**
      * @return int
      */
-    public function getCounter(): int
+    public function getCounter()
     {
         return $this->counter;
     }
@@ -94,20 +94,22 @@ class Product
      */
     public function decrementCounter(): void
     {
-        if ($this->price != null && $this->price->getSign() > 0) {
-            if ($this->counter === null) {
-                throw new \Exception("null counter");
-            }
-
-            $this->counter = $this->counter - 1;
-
-            if ($this->counter < 0) {
-                throw new \Exception("Negative counter");
-            }
-        } else {
-            throw new \Exception("Invalid price");
-
-        }
+//        if ($this->price != null && $this->price->getSign() > 0) {
+//            if ($this->counter === null) {
+//                throw new \Exception("null counter");
+//            }
+//
+//            $this->counter = $this->counter - 1;
+//
+//            if ($this->counter < 0) {
+//                throw new \Exception("Negative counter");
+//            }
+//        } else {
+//            throw new \Exception("Invalid price");
+//
+//        }
+        $this->counter = $this->checkPriceNull()->checkPriceInvalid()->checkCounterNull()->counter - 1;
+        $this->checkCounterNegative();
     }
 
     /**
@@ -115,19 +117,21 @@ class Product
      */
     public function incrementCounter(): void
     {
-        if ($this->price != null && $this->price->getSign() > 0) {
-            if ($this->counter === null) {
-                throw new \Exception("null counter");
-            }
-
-            if ($this->counter + 1 < 0) {
-                throw new \Exception("Negative counter");
-            }
-
-            $this->counter = $this->counter + 1;
-        } else {
-            throw new \Exception("Invalid price");
-        }
+//        if ($this->price != null && $this->price->getSign() > 0) {
+//            if ($this->counter === null) {
+//                throw new \Exception("null counter");
+//            }
+//
+//            if ($this->counter + 1 < 0) {
+//                throw new \Exception("Negative counter");
+//            }
+//
+//            $this->counter = $this->counter + 1;
+//        } else {
+//            throw new \Exception("Invalid price");
+//        }
+        $this->counter = $this->checkPriceNull()->checkPriceInvalid()->checkCounterNull()->counter + 1;
+        $this->checkCounterNegative();
     }
 
     /**
@@ -136,17 +140,19 @@ class Product
      */
     public function changePriceTo(?BigDecimal $newPrice): void
     {
-        if ($this->counter === null) {
-            throw new \Exception("null counter");
-        }
-
-        if ($this->counter > 0) {
-            if ($newPrice === null) {
-                throw new \Exception("new price null");
-            }
-
-            $this->price = $newPrice;
-        }
+//        if ($this->counter === null) {
+//            throw new \Exception("null counter");
+//        }
+//
+//        if ($this->counter > 0) {
+//            if ($newPrice === null) {
+//                throw new \Exception("new price null");
+//            }
+//
+//            $this->price = $newPrice;
+//        }
+        $this->checkCounterNull()->checkNewPriceNull($newPrice);
+        $this->price = $newPrice;
     }
 
     /**
@@ -156,43 +162,93 @@ class Product
      */
     public function replaceCharFromDesc(?string $charToReplace, ?string $replaceWith): void
     {
-        if ($this->longDesc === null || empty($this->longDesc) || $this->desc === null || empty($this->desc)) {
-            throw new \Exception("null or empty desc");
-        }
-
-        $this->longDesc = str_replace($charToReplace, $replaceWith, $this->longDesc);
-        $this->desc = str_replace($charToReplace, $replaceWith, $this->desc);
+//        if ($this->longDesc === null || empty($this->longDesc) || $this->desc === null || empty($this->desc)) {
+//            throw new \Exception("null or empty desc");
+//        }
+//
+//        $this->longDesc = str_replace($charToReplace, $replaceWith, $this->longDesc);
+//        $this->desc = str_replace($charToReplace, $replaceWith, $this->desc);
+        $this->longDesc = str_replace($charToReplace, $replaceWith, $this->checkNullOrEmptyLongDesc()->longDesc);
+        $this->desc = str_replace($charToReplace, $replaceWith, $this->checkNullOrEmptyDesc()->desc);
     }
 
     /**
      * @return string
      */
     public function formatDesc(): string {
-        if ($this->longDesc === null || empty($this->longDesc) || $this->desc === null || empty($this->desc)) {
+//        if ($this->longDesc === null || empty($this->longDesc) || $this->desc === null || empty($this->desc)) {
+//            return "";
+//        }
+        
+        if (isLongDescNull() || isLongDescEmpty() || isDescNull() || isDescEmpty()) {
             return "";
         }
 
         return $this->desc . " *** " . $this->longDesc;
     }
+    
+    protected function checkPriceNull(){
+        if($this->price === null){
+            throw new \Exception("Price null");
+        }
+        return $this;
+    }
+    
+    protected function checkNewPriceNull($newPrice){
+        if($newPrice === null){
+            throw new \Exception("new price null");
+        }
+        return $this;
+    }
+    
+    protected function checkPriceInvalid(){
+        if($this->price->getSign() <= 0){
+            throw new \Exception("Invalid price");
+        }
+        return $this;
+    }
+    
+    protected function checkCounterNull(){
+        if($this->counter === null){
+            throw new \Exception("null counter");
+        }
+        return $this;
+    }
+    
+    protected function checkCounterNegative(){
+        if($this->counter < 0){
+            throw new \Exception("Negative counter");
+        }
+        return $this;
+    }
+    
+    protected function isDescNull(){
+        return (bool) $this->desc;
+    }
+    
+    protected function isDescEmpty(){
+        return empty($this->desc);
+    }
+    
+    protected function isLongDescNull(){
+        return (bool)$this->longDesc;
+    }
+    
+    protected function isLongDescEmpty(){
+        return empty($this->longDesc);
+    }
+    
+    protected function checkNullOrEmptyDesc(){
+        if(isDescNull() || isDescEmpty()){
+            throw new \Exception("null or empty desc");
+        }
+        return $this;
+    }
+    
+    protected function checkNullOrEmptyLongDesc(){
+        if(isLongDescNull() || isLongDescEmpty()){
+            throw new \Exception("null or empty longDesc");
+        }
+        return $this;
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

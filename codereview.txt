@@ -1,0 +1,40 @@
+Dostrzegane problemy:
+
+1. Metody getPrice(), getDesc(), getLongDesc() i getCounter() spowodujá Fatal error, 
+jeśli będą wywołane przy odpowiednich wartościach null. Na przykład, mamy
+$product = new Product(null, null, null, null);
+product->getPrice(); //Fatal error
+
+Rozwiązanie:
+a) usunięcie controli typu:
+public function getPrice()
+    {
+        return $this->price;
+    }
+b) rzucić Exception.
+
+2. W metodach są powtarzalne sprawdzania wartości.
+
+Rozwiązanie: 
+stworzenie dodatkowych ukrytych metod checkCosTam do sprawdzania tych wartości.
+
+3. Metoda changePriceTo(?BigDecimal $newPrice) pozwala na wywołanie z
+wartością argumenta null i jednocześnie rzuca Exception przy takiej wartości.
+Według mnie nielogicznie.
+Jeśli counter = 0 to metoda nie zadziała i nie będzie powiadomienia.
+
+Rozwiązanie:
+a) usunięcie ? z argumentu metody
+b) przynajmniej stworzyć odrębną metode sprawdzania wartości
+c) rzucić Exception jeśli counter = 0
+
+4. W metodach replaceCharFromDesc i formatDesc zbyt długię if, powtarza się.
+Z treści Exception nie zrozumiało która wartość jest null lub empty, desc czy longDesc.
+
+Rozwiązanie:
+a) Podzielić sprawdzania kazdego warunka
+b) Zgrupowac otdzielnie desc i longDesc
+
+
+
+
