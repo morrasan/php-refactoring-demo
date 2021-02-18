@@ -130,8 +130,7 @@ class Product
 //        } else {
 //            throw new \Exception("Invalid price");
 //        }
-        $this->counter = $this->checkPriceNull()->checkPriceInvalid()->checkCounterNull()->counter + 1;
-        $this->checkCounterNegative();
+        $this->counter = $this->checkPriceNull()->checkPriceInvalid()->checkCounterNull()->checkCounterNegative()->counter + 1;
     }
 
     /**
