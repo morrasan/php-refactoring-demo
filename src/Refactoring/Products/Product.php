@@ -223,7 +223,7 @@ class Product
     }
     
     protected function isDescNull(){
-        return (bool) $this->desc;
+        return !(bool) $this->desc;
     }
     
     protected function isDescEmpty(){
@@ -231,7 +231,7 @@ class Product
     }
     
     protected function isLongDescNull(){
-        return (bool)$this->longDesc;
+        return !(bool)$this->longDesc;
     }
     
     protected function isLongDescEmpty(){
