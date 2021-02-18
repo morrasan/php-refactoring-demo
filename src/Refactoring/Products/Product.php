@@ -180,7 +180,7 @@ class Product
 //            return "";
 //        }
         
-        if (isLongDescNull() || isLongDescEmpty() || isDescNull() || isDescEmpty()) {
+        if ($this->isLongDescNull() || $this->isLongDescEmpty() || $this->isDescNull() || $this->isDescEmpty()) {
             return "";
         }
 
@@ -239,14 +239,14 @@ class Product
     }
     
     protected function checkNullOrEmptyDesc(){
-        if(isDescNull() || isDescEmpty()){
+        if($this->isDescNull() || $this->isDescEmpty()){
             throw new \Exception("null or empty desc");
         }
         return $this;
     }
     
     protected function checkNullOrEmptyLongDesc(){
-        if(isLongDescNull() || isLongDescEmpty()){
+        if($this->isLongDescNull() || $this->isLongDescEmpty()){
             throw new \Exception("null or empty longDesc");
         }
         return $this;
