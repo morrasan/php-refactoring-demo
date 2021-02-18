@@ -60,33 +60,33 @@ class Product
     /**
      * @return BigDecimal
      */
-    public function getPrice()
+    public function getPrice(): BigDecimal
     {
-        return $this->price;
+        return $this->checkPriceNull()->checkPriceInvalid()->price;
     }
 
     /**
      * @return string
      */
-    public function getDesc()
+    public function getDesc(): string
     {
-        return $this->desc;
+        return $this->checkNullOrEmptyDesc()->desc;
     }
 
     /**
      * @return string
      */
-    public function getLongDesc()
+    public function getLongDesc(): string
     {
-        return $this->longDesc;
+        return $this->checkNullOrEmptyLongDesc()->longDesc;
     }
 
     /**
      * @return int
      */
-    public function getCounter()
+    public function getCounter(): int
     {
-        return $this->counter;
+        return $this->checkCounterNull()->checkCounterNegative()->counter;
     }
 
     /**
